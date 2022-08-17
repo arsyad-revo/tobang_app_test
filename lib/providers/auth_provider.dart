@@ -7,6 +7,7 @@ import 'package:tobang_app_test/constants/url_constant.dart';
 import 'package:tobang_app_test/models/basic_response_model.dart';
 import 'package:tobang_app_test/models/sign_in_model.dart';
 import 'package:tobang_app_test/screens/home_screen.dart';
+import 'package:tobang_app_test/screens/sign_in_screen.dart';
 import 'package:tobang_app_test/services/api_service.dart';
 import 'package:tobang_app_test/services/session_service.dart';
 import 'package:tobang_app_test/utils/widget_util.dart';
@@ -16,7 +17,7 @@ class AuthNotifier with ChangeNotifier {
   BasicResponse authResult = BasicResponse();
   bool? isPasswordShowed = false;
   bool? isRePasswordShowed = false;
-  SignIn? dataUser;
+  SignInModel? dataUser;
   DateTime selectedDate = DateTime.now();
 
   Future<BasicResponse> signIn(
@@ -33,9 +34,10 @@ class AuthNotifier with ChangeNotifier {
       authResult = response;
       log(authResult.data.toString(), name: "Login");
       if (response.statusCode == 200) {
-        dataUser = SignIn.fromJson(authResult.data!);
+        dataUser = SignInModel.fromJson(authResult.data!);
         Session.data.setString('access_token', dataUser!.accessToken!);
-        Session.data.setInt('access_token', authResult.data!['data']['id']);
+        Session.data.setInt('id', authResult.data!['data']['id']);
+        Session.data.setBool('is_login', true);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const Home()),
@@ -116,6 +118,16 @@ class AuthNotifier with ChangeNotifier {
     }
     notifyListeners();
     return stringDate;
+  }
+
+  logout(BuildContext ctx) {
+    Session.data.remove('access_token');
+    Session.data.remove('id');
+    Session.data.setBool('is_login', false);
+    Navigator.pushReplacement(
+      ctx,
+      MaterialPageRoute(builder: (ctx) => const SignIn()),
+    );
   }
 
   setShowPassword() {

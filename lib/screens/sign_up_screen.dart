@@ -21,6 +21,7 @@ class _SignUpState extends State<SignUp> {
   TextEditingController password = TextEditingController();
   TextEditingController repassword = TextEditingController();
   TextEditingController date = TextEditingController();
+  String? selectedGender;
 
   final _formKey = GlobalKey<FormState>();
   @override
@@ -53,6 +54,7 @@ class _SignUpState extends State<SignUp> {
               TextFieldCustom(
                 controller: email,
                 hint: "Email Address",
+                isEmail: true,
                 prefixIcon: Icons.mail_outline_rounded,
               ),
               TextFieldCustom(
@@ -68,6 +70,40 @@ class _SignUpState extends State<SignUp> {
                 controller: lastname,
                 hint: "Last Name",
                 prefixIcon: Icons.person_outline_rounded,
+              ),
+              DropdownButtonFormField<String>(
+                value: selectedGender,
+                hint: const Text("Gender"),
+                decoration: InputDecoration(
+                    hintText: 'Gender',
+                    filled: true,
+                    prefixIcon: const Icon(Icons.person_outline_rounded),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          width: 1,
+                          color: Theme.of(context).colorScheme.primary),
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    border: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                        width: 0,
+                        style: BorderStyle.none,
+                      ),
+                      borderRadius: BorderRadius.circular(10.0),
+                    )),
+                onChanged: (value) => setState(() => selectedGender = value),
+                validator: (value) =>
+                    value == null ? 'This field is required' : null,
+                items: ['Male', 'Female']
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(
+                height: 15,
               ),
               TextFieldCustom(
                 controller: date,
@@ -109,6 +145,19 @@ class _SignUpState extends State<SignUp> {
                             setState(() {});
                             if (_formKey.currentState!.validate()) {
                               _formKey.currentState!.save();
+                              if (password.text != repassword.text) {
+                                return showSnackbar(
+                                    context, "Password do not match");
+                              }
+                              context.read<AuthNotifier>().signUp(
+                                  email.text,
+                                  password.text,
+                                  phone.text,
+                                  firstname.text,
+                                  lastname.text,
+                                  date.text,
+                                  selectedGender == "Male" ? 1 : 2,
+                                  context);
                             }
                           },
                     child: loading

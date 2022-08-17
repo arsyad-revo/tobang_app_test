@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tobang_app_test/providers/auth_provider.dart';
+import 'package:tobang_app_test/utils/func_util.dart';
 
 class TextFieldCustom extends StatelessWidget {
   final TextEditingController? controller;
@@ -11,6 +12,7 @@ class TextFieldCustom extends StatelessWidget {
   final bool? isDate;
   final IconData? suffixIcon;
   final Function()? onTap;
+  final bool? isEmail;
   const TextFieldCustom(
       {Key? key,
       this.controller,
@@ -20,7 +22,8 @@ class TextFieldCustom extends StatelessWidget {
       this.isRePassword = false,
       this.suffixIcon,
       this.isDate = false,
-      this.onTap})
+      this.onTap,
+      this.isEmail = false})
       : super(key: key);
 
   @override
@@ -40,8 +43,15 @@ class TextFieldCustom extends StatelessWidget {
                   : false,
           readOnly: isDate!,
           onTap: onTap,
-          validator: (value) =>
-              value!.isEmpty ? 'This field is required' : null,
+          validator: (value) {
+            if (value!.isEmpty) {
+              return 'This field is required';
+            } else if (value.isNotEmpty && isEmail! && !isValidEmail(value)) {
+              return 'Email not valid';
+            } else {
+              return null;
+            }
+          },
           decoration: InputDecoration(
               hintText: hint,
               filled: true,

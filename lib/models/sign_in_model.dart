@@ -1,12 +1,12 @@
-class SignIn {
+class SignInModel {
   String? accessToken;
   String? tokenType;
   User? user;
   Status? status;
 
-  SignIn({this.accessToken, this.tokenType, this.user, this.status});
+  SignInModel({this.accessToken, this.tokenType, this.user, this.status});
 
-  SignIn.fromJson(Map<dynamic, dynamic> json) {
+  SignInModel.fromJson(Map<dynamic, dynamic> json) {
     accessToken = json['access_token'];
     tokenType = json['token_type'];
     user = json['user'] != null ? User.fromJson(json['user']) : null;
