@@ -18,6 +18,7 @@ class APIService {
           'Authorization': 'Bearer ${Session.data.getString('access_token')}',
       }).timeout(Duration(seconds: timeout));
       final data = json.decode(response.body);
+      log(data.toString(), name: "GET Response");
       if (response.statusCode == 200) {
         result = BasicResponse(
             messages: "Success", data: data, statusCode: response.statusCode);

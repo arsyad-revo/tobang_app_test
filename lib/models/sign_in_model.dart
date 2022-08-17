@@ -3,14 +3,17 @@ class SignInModel {
   String? tokenType;
   User? user;
   Status? status;
+  Data? data;
 
-  SignInModel({this.accessToken, this.tokenType, this.user, this.status});
+  SignInModel(
+      {this.accessToken, this.tokenType, this.user, this.status, this.data});
 
   SignInModel.fromJson(Map<dynamic, dynamic> json) {
     accessToken = json['access_token'];
     tokenType = json['token_type'];
     user = json['user'] != null ? User.fromJson(json['user']) : null;
     status = json['status'] != null ? Status.fromJson(json['status']) : null;
+    data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }
 
   Map<dynamic, dynamic> toJson() {
@@ -51,7 +54,7 @@ class User {
 }
 
 class Status {
-  String? kode;
+  dynamic kode;
   String? keterangan;
 
   Status({this.kode, this.keterangan});
@@ -77,7 +80,7 @@ class Data {
   String? grup;
   String? role;
   String? tglLahir;
-  int? jenisKelamin;
+  dynamic jenisKelamin;
   int? id;
   Status? status;
   Status? accountStatus;

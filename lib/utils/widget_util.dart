@@ -10,7 +10,7 @@ showSnackbar(context, text, {Color? color}) {
 }
 
 customLoading() {
-  return const CircularProgressIndicator(
-    color: Colors.white,
+  return CircularProgressIndicator(
+    color: Colors.lightBlue[800]!,
   );
 }
