@@ -82,12 +82,18 @@ class AuthNotifier with ChangeNotifier {
         "password": "$password",
         "strict_password": false
       };
-      final response = await APIService.postData(UrlConstant.userUrl, params);
+      log(params.toString(), name: 'Param SignUp');
+      final response =
+          await APIService.postData(UrlConstant.userUrl, params, isJson: true);
 
       authResult = response;
       log(authResult.data.toString(), name: "Register");
       if (response.statusCode == 200) {
         showSnackbar(context, "Success : ${authResult.messages}");
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const SignIn()),
+        );
       } else {
         showSnackbar(
             context, "Error ${authResult.statusCode} : ${authResult.messages}");

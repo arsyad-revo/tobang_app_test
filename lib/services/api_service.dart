@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -55,7 +56,8 @@ class APIService {
   }
 
   static Future<BasicResponse> postData(
-      String? url, Map<dynamic, dynamic>? params) async {
+      String? url, Map<dynamic, dynamic>? params,
+      {bool isJson = false}) async {
     BasicResponse result = BasicResponse();
     int timeout = 15;
     try {
@@ -63,24 +65,22 @@ class APIService {
           .post(Uri.parse(url!),
               headers: <String, String>{
                 'Accept': 'application/json',
-                'Content-Type':
-                    'application/x-www-form-urlencoded; charset=UTF-8',
+                if (isJson) 'Content-Type': 'application/json; charset=UTF-8',
+                if (!isJson)
+                  'Content-Type':
+                      'application/x-www-form-urlencoded; charset=UTF-8',
                 if (Session.data.getBool('is_login')!)
                   'Authorization':
                       'Bearer ${Session.data.getString('access_token')}',
               },
-              body: params)
+              body: isJson ? jsonEncode(params) : params)
           .timeout(Duration(seconds: timeout));
       final data = json.decode(response.body);
-      if (response.statusCode == 200) {
-        result = BasicResponse(
-            messages: "Success", data: data, statusCode: response.statusCode);
-      } else {
-        result = BasicResponse(
-            messages: data['status']['keterangan'],
-            data: data,
-            statusCode: response.statusCode);
-      }
+      log(response.body, name: "Result API");
+      result = BasicResponse(
+          messages: data['status']['keterangan'],
+          data: data,
+          statusCode: response.statusCode);
     } on TimeoutException catch (e) {
       if (kDebugMode) {
         print('Timeout Error: $e');

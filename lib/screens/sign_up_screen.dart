@@ -60,6 +60,7 @@ class _SignUpState extends State<SignUp> {
               TextFieldCustom(
                 controller: phone,
                 hint: "Phone Number",
+                isPhone: true,
                 prefixIcon: Icons.phone_android,
               ),
               TextFieldCustom(

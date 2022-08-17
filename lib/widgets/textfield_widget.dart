@@ -13,6 +13,7 @@ class TextFieldCustom extends StatelessWidget {
   final IconData? suffixIcon;
   final Function()? onTap;
   final bool? isEmail;
+  final bool? isPhone;
   const TextFieldCustom(
       {Key? key,
       this.controller,
@@ -23,7 +24,8 @@ class TextFieldCustom extends StatelessWidget {
       this.suffixIcon,
       this.isDate = false,
       this.onTap,
-      this.isEmail = false})
+      this.isEmail = false,
+      this.isPhone = false})
       : super(key: key);
 
   @override
@@ -52,6 +54,11 @@ class TextFieldCustom extends StatelessWidget {
               return null;
             }
           },
+          keyboardType: isPhone!
+              ? TextInputType.phone
+              : isEmail!
+                  ? TextInputType.emailAddress
+                  : TextInputType.text,
           decoration: InputDecoration(
               hintText: hint,
               filled: true,
